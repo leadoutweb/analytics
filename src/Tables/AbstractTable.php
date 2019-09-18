@@ -267,7 +267,7 @@ abstract class AbstractTable
      */
     private function getDefaultRow($column, $value, $definition)
     {
-        return collect([$column->getName() => $value])->merge($this->getDefaultMetrics($definition))->toArray();
+        return collect([$column->getName() => $value])->merge($this->getDefaultMetrics($definition));
     }
 
     /**
@@ -321,14 +321,13 @@ abstract class AbstractTable
      *
      * @param object     $row        the row.
      * @param Definition $definition the definition that the data came from.
-     * @return array the parsed row.
+     * @return Collection the parsed row.
      */
     private function parseRow($row, $definition)
     {
         return $definition->getDimensionsAndMetrics()
             ->mapWithKeys(function ($column) use ($row) {
                 return [$column => $this->getColumn($column)->format($row->{$column})];
-            })
-            ->toArray();
+            });
     }
 }
