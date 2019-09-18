@@ -2,8 +2,8 @@
 
 namespace Leadout\Analytics;
 
+use Leadout\Analytics\Results\Sheet;
 use Leadout\Analytics\Tables\AbstractTable;
-use Illuminate\Support\Collection;
 
 class Engine
 {
@@ -28,11 +28,26 @@ class Engine
      * Run the given definition.
      *
      * @param Definition $definition the definition.
-     * @return Collection the result.
+     * @return Sheet the result.
      */
     public function run($definition)
     {
-        return $this->getTable($definition)->query($definition);
+        return Sheet::fromSheets($this->getSheets($definition));
+    }
+
+    /**
+     * @param Definition $definition
+     * @return mixed
+     */
+    private function getSheets($definition)
+    {
+        return $definition->getMetrics()
+            ->groupBy(function ($metric) use ($definition) {
+                return $this->getTable($definition->copyWithMetric($metric))->getName();
+            })
+            ->map(function ($metrics, $tableName) use ($definition) {
+                return $this->tables->get($tableName)->query($definition->copyWithMetrics($metrics));
+            });
     }
 
     /**

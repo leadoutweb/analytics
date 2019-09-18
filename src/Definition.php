@@ -225,4 +225,17 @@ class Definition
 
         return $this;
     }
+
+    public function copyWithMetrics($metrics)
+    {
+        return Definition::make($metrics)
+            ->setDimensions($this->getDimensions())
+            ->setFilters($this->getFilters())
+            ->setOrderings($this->getOrderings());
+    }
+
+    public function copyWithMetric($metric)
+    {
+        return $this->copyWithMetrics([$metric]);
+    }
 }

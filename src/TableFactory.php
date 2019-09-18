@@ -32,6 +32,14 @@ class TableFactory
         return $this->tables;
     }
 
+    public function get($name)
+    {
+        return $this->tables->first(function($table) use ($name) {
+            /** @var AbstractTable $table */
+            return $table->getName() == $name;
+        });
+    }
+
     /**
      * Add the given table to the factory.
      *

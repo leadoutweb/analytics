@@ -10,9 +10,17 @@ use Leadout\Analytics\Columns\Column;
 use Leadout\Analytics\Definition;
 use Leadout\Analytics\Filter;
 use Leadout\Analytics\Ordering;
+use Leadout\Analytics\Results\Sheet;
 
 abstract class AbstractTable
 {
+    /**
+     * Get the name of the table.
+     *
+     * @return string the name.
+     */
+    abstract public function getName();
+
     /**
      * Get the table for the given definition.
      *
@@ -43,12 +51,17 @@ abstract class AbstractTable
      * Query the table.
      *
      * @param Definition $definition the definition to query the table with.
-     * @return Collection the result.
+     * @return Sheet the result.
      */
     public function query($definition)
     {
+        return Sheet::parse($this->getData($definition), $definition);
+    }
+
+    private function getData($definition)
+    {
         return $this->getDefaultData($definition)
-            ->merge($this->parse($this->getData($definition), $definition))
+            ->merge($this->parse($this->getRawData($definition), $definition))
             ->values();
     }
 
@@ -58,7 +71,7 @@ abstract class AbstractTable
      * @param Definition $definition the definition.
      * @return Collection the data.
      */
-    private function getData($definition)
+    private function getRawData($definition)
     {
         $query = $this->getTable($definition);
 
