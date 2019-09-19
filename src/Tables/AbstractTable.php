@@ -95,10 +95,10 @@ abstract class AbstractTable
      */
     private function applyDimensions($query, $definition)
     {
-        $definition->getDimensions()->each(function ($dimension) use ($query) {
+        $definition->getDimensions()->each(function ($dimension, $index) use ($query) {
             $query
-                ->selectRaw($this->getSelectExpression($dimension) . ' as ' . $dimension)
-                ->groupBy(DB::raw($this->getGroupByExpression($dimension)));
+                ->selectRaw($this->getSelectExpression($dimension) . ' as dimension_' . $index)
+                ->groupBy('dimension_' . $index);
         });
     }
 
@@ -111,8 +111,8 @@ abstract class AbstractTable
      */
     private function applyMetrics($query, $definition)
     {
-        $definition->getMetrics()->each(function ($metric) use ($query) {
-            $query->selectRaw($this->getSelectExpression($metric) . ' as ' . $metric);
+        $definition->getMetrics()->each(function ($metric, $index) use ($query) {
+            $query->selectRaw($this->getSelectExpression($metric) . ' as metric_' . $index);
         });
     }
 
@@ -325,9 +325,20 @@ abstract class AbstractTable
      */
     private function parseRow($row, $definition)
     {
-        return $definition->getDimensionsAndMetrics()
-            ->mapWithKeys(function ($column) use ($row) {
-                return [$column => $this->getColumn($column)->format($row->{$column})];
-            });
+        return $this->parseDimensions($row, $definition)->merge($this->parseMetrics($row, $definition));
+    }
+
+    private function parseDimensions($row, $definition)
+    {
+        return $definition->getDimensions()->mapWithKeys(function ($column, $index) use ($row) {
+            return [$column => $this->getColumn($column)->format($row->{'dimension_' . $index})];
+        });
+    }
+
+    private function parseMetrics($row, $definition)
+    {
+        return $definition->getMetrics()->mapWithKeys(function ($column, $index) use ($row) {
+            return [$column => $this->getColumn($column)->format($row->{'metric_' . $index})];
+        });
     }
 }
