@@ -29,13 +29,6 @@ interface Contract
     public function getFilterExpression();
 
     /**
-     * Get the expression to use when the column is used in a group by clause.
-     *
-     * @return string the expression.
-     */
-    public function getGroupByExpression();
-
-    /**
      * Format the given value.
      *
      * @param string $value the value to format.

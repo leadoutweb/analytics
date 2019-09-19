@@ -215,17 +215,6 @@ abstract class AbstractTable
     }
 
     /**
-     * Get the group by expression for the column with the given name.
-     *
-     * @param string $name the name.
-     * @return string the filter expression.
-     */
-    private function getGroupByExpression($name)
-    {
-        return $this->getColumn($name)->getGroupByExpression();
-    }
-
-    /**
      * Get the column with the given name.
      *
      * @param string $name the name of the column.
@@ -311,8 +300,8 @@ abstract class AbstractTable
     private function getDimensionKey($row, $definition)
     {
         return $definition->getDimensions()
-            ->map(function ($dimension) use ($row) {
-                return $row->{$dimension};
+            ->map(function ($dimension, $index) use ($row) {
+                return $row->{'dimension_' . $index};
             })->prepend('key')->implode('/');
     }
 

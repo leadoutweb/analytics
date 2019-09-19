@@ -177,16 +177,6 @@ class TimeColumn implements Contract
     }
 
     /**
-     * Get the expression to use when the column is used in a group by clause.
-     *
-     * @return string the expression.
-     */
-    public function getGroupByExpression()
-    {
-        return $this->getExpression();
-    }
-
-    /**
      * Get the expression for this column.
      *
      * @return string the expression.

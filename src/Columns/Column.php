@@ -42,18 +42,15 @@ class Column implements Contract
      * @param string       $name             the name of the column.
      * @param string       $selectExpression the expression to use when the column is used in a select clause.
      * @param string       $filterExpression the expression to use when the column is used in a filter clause
-     * @param string       $groupByExpression the expression to use when the column is used in a group by clause
      * @param Closure|null $formatter        a closure that formats a value in the column.
      */
-    public function __construct($name, $selectExpression, $filterExpression, $groupByExpression,$formatter = null)
+    public function __construct($name, $selectExpression, $filterExpression,$formatter = null)
     {
         $this->name = $name;
 
         $this->selectExpression = $selectExpression;
 
         $this->filterExpression = $filterExpression;
-
-        $this->groupByExpression = $groupByExpression;
 
         $this->formatter = $formatter;
     }
@@ -63,14 +60,13 @@ class Column implements Contract
      *
      * @param string       $name             the name of the column.
      * @param string       $selectExpression the expression to use when the column is used in a select clause.
-     * @param string       $groupByExpression the expression to use when the column is used in a group by clause.
      * @param string       $filterExpression the expression to use when the column is used in a filter clause
      * @param Closure|null $formatter        a closure that formats a value in the column.
      * @return Column the column.
      */
-    public static function make($name, $selectExpression, $filterExpression, $groupByExpression, $formatter = null)
+    public static function make($name, $selectExpression, $filterExpression, $formatter = null)
     {
-        return new Column($name, $selectExpression, $filterExpression, $groupByExpression,$formatter);
+        return new Column($name, $selectExpression, $filterExpression,$formatter);
     }
 
     /**
@@ -250,16 +246,6 @@ class Column implements Contract
      * @return string the expression.
      */
     public function getFilterExpression()
-    {
-        return $this->filterExpression;
-    }
-
-    /**
-     * Get the expression to use when the column is used in a group by clause.
-     *
-     * @return string the expression.
-     */
-    public function getGroupByExpression()
     {
         return $this->filterExpression;
     }
