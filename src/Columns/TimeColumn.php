@@ -205,6 +205,8 @@ class TimeColumn implements Contract
      */
     public function values($definition)
     {
+        return new Collection;
+        /*
         $values = new Collection;
 
         foreach ($this->getPeriod($definition) as $value) {
@@ -212,6 +214,7 @@ class TimeColumn implements Contract
         }
 
         return $values;
+        */
     }
 
     /**
